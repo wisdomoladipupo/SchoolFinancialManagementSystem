@@ -1,0 +1,35 @@
+{
+  "students": [
+    {
+      "id": 1,
+      "name": "Amina Yusuf",
+      "grade": "Basic 4",
+      "feeAmount": 250000,
+      "paidAmount": 180000,
+      "lastPaymentDate": "2026-06-01",
+      "note": "Transport balance pending",
+      "feeCategory": "Tuition"
+    },
+    {
+      "id": 2,
+      "name": "Daniel Okafor",
+      "grade": "SS1",
+      "feeAmount": 400000,
+      "paidAmount": 400000,
+      "lastPaymentDate": "2026-05-28",
+      "note": "Full payment received",
+      "feeCategory": "Development Levy"
+    },
+    {
+      "id": 3,
+      "name": "Sade Martins",
+      "grade": "JSS2",
+      "feeAmount": 320000,
+      "paidAmount": 120000,
+      "lastPaymentDate": "2026-06-10",
+      "note": "Awaiting final installment",
+      "feeCategory": "Exam"
+    }
+  ],
+  "payments": []
+}
