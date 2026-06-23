@@ -19,93 +19,71 @@ type Student = {
 };
 
 const schoolClasses = [
-  "Preschool",
-  "Nursery 1",
-  "Nursery 2",
-  "Nursery 3",
-  "Basic 1",
-  "Basic 2",
-  "Basic 3",
-  "Basic 4",
-  "Basic 5",
-  "JSS1",
-  "JSS2",
-  "JSS3",
-  "SS1",
-  "SS2",
+  "Preschool", "Nursery 1", "Nursery 2", "Nursery 3",
+  "Basic 1", "Basic 2", "Basic 3", "Basic 4", "Basic 5",
+  "JSS1", "JSS2", "JSS3", "SS1", "SS2",
 ];
 
 const feeCategories = ["Tuition", "Exam", "Transport", "Development Levy", "Other"];
 
 const starterStudents: Student[] = [
-  {
-    id: 1,
-    name: "Amina Yusuf",
-    grade: "Basic 4",
-    feeAmount: 250000,
-    paidAmount: 180000,
-    lastPaymentDate: "2026-06-01",
-    note: "Transport balance pending",
-    feeCategory: "Tuition",
-  },
-  {
-    id: 2,
-    name: "Daniel Okafor",
-    grade: "SS1",
-    feeAmount: 400000,
-    paidAmount: 400000,
-    lastPaymentDate: "2026-05-28",
-    note: "Full payment received",
-    feeCategory: "Development Levy",
-  },
-  {
-    id: 3,
-    name: "Sade Martins",
-    grade: "JSS2",
-    feeAmount: 320000,
-    paidAmount: 120000,
-    lastPaymentDate: "2026-06-10",
-    note: "Awaiting final installment",
-    feeCategory: "Exam",
-  },
+  { id: 1, name: "Amina Yusuf", familyName: "Yusuf Family", grade: "Basic 4", feeAmount: 250000, paidAmount: 180000, lastPaymentDate: "2026-06-01", note: "Transport balance pending", feeCategory: "Tuition" },
+  { id: 2, name: "Daniel Okafor", familyName: "Okafor Family", grade: "SS1", feeAmount: 400000, paidAmount: 400000, lastPaymentDate: "2026-05-28", note: "Full payment received", feeCategory: "Development Levy" },
+  { id: 3, name: "Sade Martins", familyName: "Martins Family", grade: "JSS2", feeAmount: 320000, paidAmount: 120000, lastPaymentDate: "2026-06-10", note: "Awaiting final installment", feeCategory: "Exam" },
 ];
 
 function formatCurrency(value: number) {
-  return new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
-    maximumFractionDigits: 0,
-  }).format(value);
+  return new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(value);
 }
 
 function formatDate(value: string) {
-  if (!value) return "No payment yet";
-  return new Date(value).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  if (!value) return "—";
+  return new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
+
+function getPaymentStatus(paid: number, total: number) {
+  const pct = total > 0 ? paid / total : 0;
+  if (pct >= 1) return { label: "Paid", color: "text-emerald-600 bg-emerald-50", bar: "bg-emerald-500" };
+  if (pct >= 0.5) return { label: "Partial", color: "text-amber-600 bg-amber-50", bar: "bg-amber-400" };
+  return { label: "Owing", color: "text-red-600 bg-red-50", bar: "bg-red-400" };
+}
+
+/* ── Sidebar icon components ─────────────────────────────── */
+const IconHome = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+);
+const IconUsers = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+);
+const IconReceipt = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v.5"/><path d="M12 6v.5"/></svg>
+);
+const IconFamily = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+);
+const IconReport = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+);
+const IconMenu = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+);
+const IconSearch = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+);
+const IconUpload = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+);
 
 export default function Home() {
   const [students, setStudents] = useState<Student[]>(starterStudents);
   const [report, setReport] = useState({ totalFee: 0, totalPaid: 0, balance: 0 });
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [studentForm, setStudentForm] = useState({
-    name: "",
-    familyName: "",
-    grade: "",
-    feeAmount: "",
-    feeCategory: "Tuition",
-  });
-  const [paymentForm, setPaymentForm] = useState({
-    studentId: "",
-    amount: "",
-    note: "",
-  });
-  const [importStatus, setImportStatus] = useState(
-    "Upload an Excel or CSV sheet with student names and classes to import them.",
-  );
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState<"overview" | "register" | "payment" | "import">("overview");
+
+  const [studentForm, setStudentForm] = useState({ name: "", familyName: "", grade: "", feeAmount: "", feeCategory: "Tuition" });
+  const [paymentForm, setPaymentForm] = useState({ studentId: "", amount: "", note: "" });
+  const [importStatus, setImportStatus] = useState("Upload an Excel or CSV sheet with student names and classes.");
   const [importing, setImporting] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -115,517 +93,320 @@ export default function Home() {
         fetch(`${API_BASE_URL}/api/students`),
         fetch(`${API_BASE_URL}/api/reports`),
       ]);
-
       const studentsData = await studentsResponse.json();
       const reportData = await reportResponse.json();
-
-      if (studentsData.students?.length) {
-        setStudents(studentsData.students);
-      }
-
-      setReport({
-        totalFee: reportData.totalFee || 0,
-        totalPaid: reportData.totalPaid || 0,
-        balance: reportData.balance || 0,
-      });
-    } catch {
-      // Keep the view responsive even if the backend is offline.
-    }
+      if (studentsData.students?.length) setStudents(studentsData.students);
+      setReport({ totalFee: reportData.totalFee || 0, totalPaid: reportData.totalPaid || 0, balance: reportData.balance || 0 });
+    } catch { /* offline fallback */ }
   };
 
-  useEffect(() => {
-    refreshDashboard();
-  }, []);
+  useEffect(() => { refreshDashboard(); }, []);
 
   const summary = useMemo(() => {
-    const totalFee = report.totalFee || students.reduce((sum, student) => sum + student.feeAmount, 0);
-    const totalPaid = report.totalPaid || students.reduce((sum, student) => sum + student.paidAmount, 0);
+    const totalFee = report.totalFee || students.reduce((s, st) => s + st.feeAmount, 0);
+    const totalPaid = report.totalPaid || students.reduce((s, st) => s + st.paidAmount, 0);
     const balance = report.balance || totalFee - totalPaid;
-    const fullyPaidCount = students.filter(
-      (student) => student.paidAmount >= student.feeAmount,
-    ).length;
-
-    return {
-      totalFee,
-      totalPaid,
-      balance,
-      fullyPaidCount,
-    };
+    const fullyPaidCount = students.filter((s) => s.paidAmount >= s.feeAmount).length;
+    const collectionRate = totalFee > 0 ? Math.round((totalPaid / totalFee) * 100) : 0;
+    return { totalFee, totalPaid, balance, fullyPaidCount, collectionRate };
   }, [students, report]);
 
-  const handleStudentSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const filteredStudents = useMemo(() => {
+    if (!searchQuery.trim()) return students;
+    const q = searchQuery.toLowerCase();
+    return students.filter((s) => s.name.toLowerCase().includes(q) || s.grade.toLowerCase().includes(q) || (s.familyName || "").toLowerCase().includes(q));
+  }, [students, searchQuery]);
 
+  const handleStudentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     const feeAmount = Number(studentForm.feeAmount);
     if (!studentForm.name || !studentForm.grade || !feeAmount) return;
-
     try {
-      const response = await fetch(`${API_BASE_URL}/api/students`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: studentForm.name,
-          familyName: studentForm.familyName,
-          grade: studentForm.grade,
-          feeAmount,
-          feeCategory: studentForm.feeCategory,
-        }),
+      const res = await fetch(`${API_BASE_URL}/api/students`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: studentForm.name, familyName: studentForm.familyName, grade: studentForm.grade, feeAmount, feeCategory: studentForm.feeCategory }),
       });
-
-      const data = await response.json();
-      if (data.student) {
-        await refreshDashboard();
-      }
-    } catch {
-      // Keep the UI responsive even if the backend is offline.
-    }
-
+      const data = await res.json();
+      if (data.student) await refreshDashboard();
+    } catch { /* offline */ }
     setStudentForm({ name: "", familyName: "", grade: "", feeAmount: "", feeCategory: "Tuition" });
   };
 
-  const handlePaymentSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const selectedStudentId = Number(paymentForm.studentId);
+  const handlePaymentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const studentId = Number(paymentForm.studentId);
     const amount = Number(paymentForm.amount);
-
-    if (!selectedStudentId || !amount) return;
-
+    if (!studentId || !amount) return;
     try {
-      const response = await fetch(`${API_BASE_URL}/api/payments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          studentId: selectedStudentId,
-          amount,
-          note: paymentForm.note,
-        }),
+      const res = await fetch(`${API_BASE_URL}/api/payments`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ studentId, amount, note: paymentForm.note }),
       });
-
-      const data = await response.json();
-      if (data.student) {
-        await refreshDashboard();
-      }
-    } catch {
-      // Keep the UI responsive even if the backend is offline.
-    }
-
+      const data = await res.json();
+      if (data.student) await refreshDashboard();
+    } catch { /* offline */ }
     setPaymentForm({ studentId: "", amount: "", note: "" });
   };
 
-  const handleExcelImport = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!selectedFile) {
-      setImportStatus("Choose an Excel or CSV file first.");
-      return;
-    }
-
-    setImporting(true);
-    setImportStatus("Reading the spreadsheet...");
-
+  const handleExcelImport = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!selectedFile) { setImportStatus("Choose a file first."); return; }
+    setImporting(true); setImportStatus("Reading spreadsheet...");
     try {
-      const workbook = XLSX.read(await selectedFile.arrayBuffer(), { type: "array" });
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const wb = XLSX.read(await selectedFile.arrayBuffer(), { type: "array" });
+      const sheet = wb.Sheets[wb.SheetNames[0]];
       const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" }) as Array<Array<string | number | boolean | null>>;
-      const firstRow = rows[0] || [];
-      const hasHeader = firstRow.some((value) => {
-        const normalized = String(value ?? "").trim().toLowerCase();
-        return normalized.includes("name") || normalized.includes("class") || normalized.includes("grade");
-      });
-
+      const first = rows[0] || [];
+      const hasHeader = first.some((v) => { const n = String(v ?? "").trim().toLowerCase(); return n.includes("name") || n.includes("class") || n.includes("grade"); });
       const dataRows = hasHeader ? rows.slice(1) : rows;
-      const headerRow = hasHeader ? firstRow : ["Name", "Class"];
-      const nameIndex = headerRow.findIndex((value) => {
-        const normalized = String(value ?? "").trim().toLowerCase();
-        return ["name", "student name", "studentname", "full name", "fullname", "student"].includes(normalized);
-      });
-      const classIndex = headerRow.findIndex((value) => {
-        const normalized = String(value ?? "").trim().toLowerCase();
-        return ["class", "grade", "class name", "student class", "level", "year"].includes(normalized);
-      });
-
-      const formattedStudents = dataRows
-        .map((row) => {
-          const name = String(row[nameIndex >= 0 ? nameIndex : 0] ?? "").trim();
-          const grade = String(row[classIndex >= 0 ? classIndex : 1] ?? "").trim();
-
-          if (!name || !grade) return null;
-
-          return {
-            name,
-            grade,
-            familyName: "Unassigned",
-            feeCategory: "Tuition",
-            feeAmount: "",
-            note: "Imported from Excel",
-          };
-        })
-        .filter(Boolean) as Array<{
-          name: string;
-          grade: string;
-          familyName: string;
-          feeCategory: string;
-          feeAmount: string;
-          note: string;
-        }>;
-
-      if (!formattedStudents.length) {
-        throw new Error("No student names and classes were found in that file.");
-      }
-
-      const response = await fetch(`${API_BASE_URL}/api/students/bulk`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ students: formattedStudents }),
-      });
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        throw new Error(responseData.error || "Import failed");
-      }
-
+      const header = hasHeader ? first : ["Name", "Class"];
+      const ni = header.findIndex((v) => ["name","student name","studentname","full name","fullname","student"].includes(String(v??"").trim().toLowerCase()));
+      const ci = header.findIndex((v) => ["class","grade","class name","student class","level","year"].includes(String(v??"").trim().toLowerCase()));
+      const formatted = dataRows.map((r) => {
+        const name = String(r[ni >= 0 ? ni : 0] ?? "").trim();
+        const grade = String(r[ci >= 0 ? ci : 1] ?? "").trim();
+        if (!name || !grade) return null;
+        return { name, grade, familyName: "Unassigned", feeCategory: "Tuition", feeAmount: "", note: "Imported from Excel" };
+      }).filter(Boolean);
+      if (!formatted.length) throw new Error("No students found in file.");
+      const res = await fetch(`${API_BASE_URL}/api/students/bulk`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ students: formatted }) });
+      const rd = await res.json();
+      if (!res.ok) throw new Error(rd.error || "Import failed");
       await refreshDashboard();
-      setImportStatus(`Imported ${responseData.students?.length || formattedStudents.length} students successfully.`);
-      setSelectedFile(null);
-      event.currentTarget.reset();
-    } catch (error) {
-      setImportStatus(error instanceof Error ? error.message : "Import failed.");
-    } finally {
-      setImporting(false);
-    }
+      setImportStatus(`Imported ${rd.students?.length || formatted.length} students.`);
+      setSelectedFile(null); e.currentTarget.reset();
+    } catch (err) { setImportStatus(err instanceof Error ? err.message : "Import failed."); }
+    finally { setImporting(false); }
   };
 
+  const navItems = [
+    { label: "Dashboard", href: "/", icon: <IconHome />, active: true },
+    { label: "Students", href: "/students", icon: <IconUsers />, active: false },
+    { label: "Fees", href: "/fees", icon: <IconReceipt />, active: false },
+    { label: "Families", href: "/families", icon: <IconFamily />, active: false },
+    { label: "Report", href: "/report", icon: <IconReport />, active: false },
+  ];
+
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,197,94,0.16),_transparent_28%),linear-gradient(135deg,_#fffdf7_0%,_#f4fef6_100%)] text-slate-800">
-      <div className="mx-auto flex min-h-screen max-w-7xl gap-4 p-4 lg:p-6">
-        <aside
-          className={`flex flex-col rounded-[28px] border border-red-200 bg-white/90 p-4 shadow-xl shadow-red-100/70 transition-all duration-300 ${sidebarCollapsed ? "w-20" : "w-72"}`}
-        >
-          <button
-            type="button"
-            onClick={() => setSidebarCollapsed((value) => !value)}
-            className="mb-6 flex h-11 w-11 items-center justify-center rounded-2xl border border-red-200 bg-red-50 text-xl text-red-600 transition hover:bg-red-100"
-            aria-label="Toggle sidebar"
-          >
-            ☰
-          </button>
-
-          <div className="space-y-2">
-            <Link
-              href="/"
-              className="flex items-center gap-3 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-base font-semibold text-green-700"
-            >
-              <span className="text-xl">⌂</span>
-              {!sidebarCollapsed && <span>Dashboard</span>}
-            </Link>
-            <Link
-              href="/report"
-              className="flex items-center gap-3 rounded-2xl border border-red-200 bg-white px-4 py-3 text-base font-semibold text-red-600 transition hover:border-green-300 hover:bg-green-50"
-            >
-              <span className="text-xl">📊</span>
-              {!sidebarCollapsed && <span>Finance Report</span>}
-            </Link>
-            <Link
-              href="/families"
-              className="flex items-center gap-3 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-base font-semibold text-green-700 transition hover:border-red-300 hover:bg-red-50"
-            >
-              <span className="text-xl">👨‍👩‍👧‍👦</span>
-              {!sidebarCollapsed && <span>Family Dashboard</span>}
-            </Link>
-            <Link
-              href="/fees"
-              className="flex items-center gap-3 rounded-2xl border border-red-200 bg-white px-4 py-3 text-base font-semibold text-red-600 transition hover:border-green-300 hover:bg-green-50"
-            >
-              <span className="text-xl">💰</span>
-              {!sidebarCollapsed && <span>Fee Settings</span>}
-            </Link>
+    <div className="min-h-screen bg-[#fafaf8] text-gray-900">
+      <div className="flex min-h-screen">
+        {/* ── Sidebar ────────────────────────────── */}
+        <aside className={`sticky top-0 h-screen flex flex-col border-r border-gray-200 bg-white transition-all duration-300 ${sidebarCollapsed ? "w-[72px]" : "w-[240px]"}`}>
+          <div className="flex items-center gap-3 px-5 py-6 border-b border-gray-100">
+            <button onClick={() => setSidebarCollapsed((v) => !v)} className="flex items-center justify-center w-9 h-9 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors" aria-label="Toggle sidebar">
+              <IconMenu />
+            </button>
+            {!sidebarCollapsed && <span className="text-base font-semibold tracking-tight text-gray-900">Finance</span>}
           </div>
-
-          <div className="mt-auto rounded-2xl border border-green-100 bg-green-50/80 p-4 text-sm text-slate-600">
-            <p className="font-semibold text-slate-800">School office</p>
-            <p className="mt-1">Manage fees, balances, and payments in one place.</p>
+          <nav className="flex-1 flex flex-col gap-1 px-3 py-4">
+            {navItems.map((item) => (
+              <Link key={item.label} href={item.href}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium transition-colors ${item.active ? "bg-gray-900 text-white" : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"}`}>
+                <span className="flex-shrink-0">{item.icon}</span>
+                {!sidebarCollapsed && <span>{item.label}</span>}
+              </Link>
+            ))}
+          </nav>
+          <div className="px-3 py-4 border-t border-gray-100">
+            {!sidebarCollapsed && <p className="text-[11px] text-gray-400 text-center">School Finance v1.0</p>}
           </div>
         </aside>
 
-        <main className="flex-1 space-y-6">
-          <header className="rounded-[30px] border border-red-200 bg-white/90 p-6 shadow-xl shadow-red-100/70 sm:p-8">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        {/* ── Main ───────────────────────────────── */}
+        <main className="flex-1 overflow-y-auto">
+          {/* Header */}
+          <header className="sticky top-0 z-10 bg-[#fafaf8]/80 backdrop-blur-sm border-b border-gray-200 px-8 py-5">
+            <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.35em] text-green-600">
-                  School Finance Suite
-                </p>
-                <h1 className="mt-3 text-3xl font-semibold leading-tight text-slate-900 sm:text-4xl lg:text-5xl">
-                  Manage school fees for Preschool to SS2 with clarity.
-                </h1>
-                <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
-                  Record students, assign classes, track payments, and review outstanding balances with ease.
-                </p>
+                <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Dashboard</h1>
+                <p className="text-sm text-gray-400 mt-0.5">School financial overview</p>
               </div>
-
-              <div className="flex flex-col gap-3 rounded-3xl border border-green-100 bg-green-50/80 p-4 sm:min-w-[260px]">
-                <div className="rounded-2xl border border-green-200 bg-white px-4 py-3 text-base text-green-700">
-                  <p className="font-semibold">Today&apos;s focus</p>
-                  <p className="mt-1">{students.length} active student accounts</p>
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><IconSearch /></span>
+                  <input type="text" placeholder="Search students..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-56 pl-9 pr-4 py-2 text-sm rounded-lg border border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all" />
                 </div>
-                <Link
-                  href="/report"
-                  className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-center text-base font-semibold text-red-700 transition hover:bg-red-100"
-                >
-                  View finance report
-                </Link>
               </div>
             </div>
           </header>
 
-          <section className="grid gap-4 lg:grid-cols-3">
-            <div className="rounded-[24px] border border-red-200 bg-white p-5 shadow-md shadow-red-100/70">
-              <p className="text-base font-semibold text-slate-500">Total Fees</p>
-              <p className="mt-3 text-3xl font-semibold text-slate-900">{formatCurrency(summary.totalFee)}</p>
-            </div>
-            <div className="rounded-[24px] border border-green-200 bg-green-50 p-5 shadow-md shadow-green-100/70">
-              <p className="text-base font-semibold text-slate-600">Collected</p>
-              <p className="mt-3 text-3xl font-semibold text-green-700">
-                {formatCurrency(summary.totalPaid)}
-              </p>
-            </div>
-            <div className="rounded-[24px] border border-red-200 bg-red-50 p-5 shadow-md shadow-red-100/70">
-              <p className="text-base font-semibold text-slate-600">Outstanding</p>
-              <p className="mt-3 text-3xl font-semibold text-red-700">
-                {formatCurrency(summary.balance)}
-              </p>
-            </div>
-          </section>
-
-          <section className="rounded-[30px] border border-red-200 bg-white p-6 shadow-xl shadow-red-100/70 sm:p-8">
-            <div className="border-b border-red-100 pb-5">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.3em] text-green-600">
-                    Student & payment management
-                  </p>
-                  <h2 className="mt-2 text-2xl font-semibold text-slate-900 sm:text-3xl">
-                    Manage records with clear sections
-                  </h2>
+          <div className="px-8 py-6 space-y-8">
+            {/* ── Stat Cards ────────────────────── */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[
+                { label: "Total Expected", value: formatCurrency(summary.totalFee), sub: `${students.length} students enrolled` },
+                { label: "Total Collected", value: formatCurrency(summary.totalPaid), sub: `${summary.collectionRate}% collection rate` },
+                { label: "Outstanding", value: formatCurrency(summary.balance), sub: `${students.length - summary.fullyPaidCount} students owing` },
+                { label: "Fully Paid", value: String(summary.fullyPaidCount), sub: `of ${students.length} students` },
+              ].map((card) => (
+                <div key={card.label} className="rounded-xl border border-gray-200 bg-white p-5 transition-shadow hover:shadow-sm">
+                  <p className="text-xs font-medium uppercase tracking-wider text-gray-400">{card.label}</p>
+                  <p className="mt-2 text-2xl font-semibold tracking-tight text-gray-900">{card.value}</p>
+                  <p className="mt-1 text-xs text-gray-400">{card.sub}</p>
                 </div>
-                <div className="rounded-full border border-green-200 bg-green-50 px-4 py-2 text-sm font-semibold text-green-700">
-                  {summary.fullyPaidCount} fully paid
+              ))}
+            </div>
+
+            {/* ── Tabs ──────────────────────────── */}
+            <div className="flex items-center gap-1 border-b border-gray-200">
+              {(["overview", "register", "payment", "import"] as const).map((tab) => (
+                <button key={tab} onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2.5 text-sm font-medium capitalize transition-colors border-b-2 -mb-px ${activeTab === tab ? "border-gray-900 text-gray-900" : "border-transparent text-gray-400 hover:text-gray-600"}`}>
+                  {tab === "register" ? "Add Student" : tab === "payment" ? "Record Payment" : tab === "import" ? "Import" : "Students"}
+                </button>
+              ))}
+            </div>
+
+            {/* ── Tab: Overview (Student Table) ── */}
+            {activeTab === "overview" && (
+              <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-gray-100 bg-gray-50/60">
+                        {["Student", "Class", "Family", "Fee Amount", "Paid", "Balance", "Status", "Last Payment"].map((h) => (
+                          <th key={h} className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-400">{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredStudents.map((s, i) => {
+                        const status = getPaymentStatus(s.paidAmount, s.feeAmount);
+                        const pct = s.feeAmount > 0 ? Math.min((s.paidAmount / s.feeAmount) * 100, 100) : 0;
+                        return (
+                          <tr key={s.id} className={`border-b border-gray-50 transition-colors hover:bg-gray-50/50 ${i % 2 === 0 ? "" : "bg-gray-50/30"}`}>
+                            <td className="px-5 py-3.5 font-medium text-gray-900">{s.name}</td>
+                            <td className="px-5 py-3.5 text-gray-500">{s.grade}</td>
+                            <td className="px-5 py-3.5 text-gray-500">{s.familyName || "—"}</td>
+                            <td className="px-5 py-3.5 font-medium text-gray-900">{formatCurrency(s.feeAmount)}</td>
+                            <td className="px-5 py-3.5">
+                              <div className="flex items-center gap-2">
+                                <span className="text-gray-700">{formatCurrency(s.paidAmount)}</span>
+                                <div className="w-16 h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                                  <div className={`h-full rounded-full ${status.bar} transition-all`} style={{ width: `${pct}%` }} />
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-5 py-3.5 font-medium text-gray-900">{formatCurrency(s.feeAmount - s.paidAmount)}</td>
+                            <td className="px-5 py-3.5">
+                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${status.color}`}>{status.label}</span>
+                            </td>
+                            <td className="px-5 py-3.5 text-gray-400">{formatDate(s.lastPaymentDate)}</td>
+                          </tr>
+                        );
+                      })}
+                      {filteredStudents.length === 0 && (
+                        <tr><td colSpan={8} className="px-5 py-12 text-center text-gray-400">No students found</td></tr>
+                      )}
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            </div>
+            )}
 
-            <div className="mt-8 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-              <div className="space-y-6">
-                <div className="rounded-[24px] border border-red-100 bg-[#fffdf8] p-6">
-                  <h3 className="text-xl font-semibold text-slate-900">Add a new student</h3>
-                  <p className="mt-2 text-base text-slate-600">
-                    Create a fresh record with class, fee category, and fee amount.
-                  </p>
-
-                  <form onSubmit={handleStudentSubmit} className="mt-6 grid gap-4 md:grid-cols-2">
-                    <input
-                      className="rounded-2xl border border-red-200 bg-white px-4 py-3 text-base outline-none"
-                      placeholder="Student name"
-                      value={studentForm.name}
-                      onChange={(event) =>
-                        setStudentForm((current) => ({ ...current, name: event.target.value }))
-                      }
-                    />
-                    <input
-                      className="rounded-2xl border border-red-200 bg-white px-4 py-3 text-base outline-none"
-                      placeholder="Family name"
-                      value={studentForm.familyName}
-                      onChange={(event) =>
-                        setStudentForm((current) => ({ ...current, familyName: event.target.value }))
-                      }
-                    />
-                    <select
-                      className="rounded-2xl border border-red-200 bg-white px-4 py-3 text-base outline-none"
-                      value={studentForm.grade}
-                      onChange={(event) =>
-                        setStudentForm((current) => ({ ...current, grade: event.target.value }))
-                      }
-                    >
-                      <option value="">Select class</option>
-                      {schoolClasses.map((schoolClass) => (
-                        <option key={schoolClass} value={schoolClass}>
-                          {schoolClass}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      className="rounded-2xl border border-red-200 bg-white px-4 py-3 text-base outline-none"
-                      value={studentForm.feeCategory}
-                      onChange={(event) =>
-                        setStudentForm((current) => ({ ...current, feeCategory: event.target.value }))
-                      }
-                    >
-                      {feeCategories.map((category) => (
-                        <option key={category} value={category}>
-                          {category}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      className="rounded-2xl border border-red-200 bg-white px-4 py-3 text-base outline-none"
-                      placeholder="Total fee amount"
-                      type="number"
-                      value={studentForm.feeAmount}
-                      onChange={(event) =>
-                        setStudentForm((current) => ({ ...current, feeAmount: event.target.value }))
-                      }
-                    />
-                    <button
-                      type="submit"
-                      className="rounded-2xl bg-green-600 px-4 py-3 text-base font-semibold text-white transition hover:bg-green-500 md:col-span-2"
-                    >
-                      Save student record
+            {/* ── Tab: Register Student ────────── */}
+            {activeTab === "register" && (
+              <div className="max-w-lg">
+                <div className="rounded-xl border border-gray-200 bg-white p-6">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-1">Add New Student</h2>
+                  <p className="text-sm text-gray-400 mb-6">Enter student details and fee information</p>
+                  <form onSubmit={handleStudentSubmit} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1.5">Student Name</label>
+                      <input type="text" required value={studentForm.name} onChange={(e) => setStudentForm({ ...studentForm, name: e.target.value })}
+                        className="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300" placeholder="Full name" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1.5">Family Name</label>
+                      <input type="text" value={studentForm.familyName} onChange={(e) => setStudentForm({ ...studentForm, familyName: e.target.value })}
+                        className="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300" placeholder="Family name" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1.5">Class</label>
+                        <select required value={studentForm.grade} onChange={(e) => setStudentForm({ ...studentForm, grade: e.target.value })}
+                          className="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300">
+                          <option value="">Select class</option>
+                          {schoolClasses.map((c) => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1.5">Fee Category</label>
+                        <select value={studentForm.feeCategory} onChange={(e) => setStudentForm({ ...studentForm, feeCategory: e.target.value })}
+                          className="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300">
+                          {feeCategories.map((c) => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1.5">Fee Amount (₦)</label>
+                      <input type="number" required value={studentForm.feeAmount} onChange={(e) => setStudentForm({ ...studentForm, feeAmount: e.target.value })}
+                        className="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300" placeholder="0" />
+                    </div>
+                    <button type="submit" className="w-full rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:ring-offset-2">
+                      Add Student
                     </button>
                   </form>
-
-                  <div className="mt-6 rounded-2xl border border-dashed border-green-300 bg-white p-4">
-                    <h4 className="text-lg font-semibold text-slate-900">Import from Excel</h4>
-                    <p className="mt-2 text-sm text-slate-600">
-                      Upload a sheet with student names and classes. The app will create the records for you.
-                    </p>
-
-                    <form onSubmit={handleExcelImport} className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-                      <input
-                        type="file"
-                        accept=".xlsx,.xls,.csv"
-                        onChange={(event) => setSelectedFile(event.target.files?.[0] ?? null)}
-                        className="flex-1 rounded-2xl border border-red-200 bg-[#fffdf8] px-3 py-2 text-sm"
-                      />
-                      <button
-                        type="submit"
-                        className="rounded-2xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500"
-                      >
-                        {importing ? "Importing..." : "Import students"}
-                      </button>
-                    </form>
-
-                    <p className="mt-3 text-sm text-slate-600">{importStatus}</p>
-                  </div>
                 </div>
+              </div>
+            )}
 
-                <div className="rounded-[24px] border border-red-100 bg-[#fffdf8] p-6">
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            {/* ── Tab: Record Payment ──────────── */}
+            {activeTab === "payment" && (
+              <div className="max-w-lg">
+                <div className="rounded-xl border border-gray-200 bg-white p-6">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-1">Record Payment</h2>
+                  <p className="text-sm text-gray-400 mb-6">Log a fee payment for a student</p>
+                  <form onSubmit={handlePaymentSubmit} className="space-y-4">
                     <div>
-                      <h3 className="text-xl font-semibold text-slate-900">Student accounts</h3>
-                      <p className="mt-2 text-base text-slate-600">
-                        Payment status across all classes
-                      </p>
+                      <label className="block text-xs font-medium text-gray-500 mb-1.5">Student</label>
+                      <select required value={paymentForm.studentId} onChange={(e) => setPaymentForm({ ...paymentForm, studentId: e.target.value })}
+                        className="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300">
+                        <option value="">Select student</option>
+                        {students.map((s) => <option key={s.id} value={s.id}>{s.name} — {s.grade}</option>)}
+                      </select>
                     </div>
-                  </div>
-
-                  <div className="mt-6 space-y-3">
-                    {students.map((student) => {
-                      const balance = student.feeAmount - student.paidAmount;
-                      const status =
-                        balance <= 0 ? "Fully paid" : student.paidAmount > 0 ? "Partial" : "Outstanding";
-                      const statusColor =
-                        status === "Fully paid"
-                          ? "text-green-700"
-                          : status === "Partial"
-                            ? "text-red-600"
-                            : "text-red-700";
-
-                      return (
-                        <Link
-                          key={student.id}
-                          href={`/students/${student.id}`}
-                          className="block rounded-2xl border border-red-100 bg-white p-4 transition hover:border-green-300 hover:shadow-md"
-                        >
-                          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                            <div>
-                              <p className="text-lg font-semibold text-slate-900">{student.name}</p>
-                              <p className="mt-1 text-base text-slate-600">
-                                {student.grade} • {student.feeCategory} • {student.note}
-                              </p>
-                            </div>
-                            <span className={`text-base font-semibold ${statusColor}`}>{status}</span>
-                          </div>
-                          <div className="mt-4 grid gap-3 text-base text-slate-700 md:grid-cols-3">
-                            <div className="rounded-2xl border border-red-100 bg-green-50/70 p-3">
-                              <p className="text-sm font-semibold text-slate-500">Fee</p>
-                              <p className="mt-1">{formatCurrency(student.feeAmount)}</p>
-                            </div>
-                            <div className="rounded-2xl border border-red-100 bg-red-50/70 p-3">
-                              <p className="text-sm font-semibold text-slate-500">Paid</p>
-                              <p className="mt-1">{formatCurrency(student.paidAmount)}</p>
-                            </div>
-                            <div className="rounded-2xl border border-red-100 bg-white p-3">
-                              <p className="text-sm font-semibold text-slate-500">Balance</p>
-                              <p className="mt-1">{formatCurrency(balance)}</p>
-                            </div>
-                          </div>
-                          <p className="mt-4 text-sm font-medium text-slate-500">
-                            Last payment: {formatDate(student.lastPaymentDate)}
-                          </p>
-                        </Link>
-                      );
-                    })}
-                  </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1.5">Amount (₦)</label>
+                      <input type="number" required value={paymentForm.amount} onChange={(e) => setPaymentForm({ ...paymentForm, amount: e.target.value })}
+                        className="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300" placeholder="0" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1.5">Note</label>
+                      <input type="text" value={paymentForm.note} onChange={(e) => setPaymentForm({ ...paymentForm, note: e.target.value })}
+                        className="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300" placeholder="Optional note" />
+                    </div>
+                    <button type="submit" className="w-full rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:ring-offset-2">
+                      Record Payment
+                    </button>
+                  </form>
                 </div>
               </div>
+            )}
 
-              <div className="rounded-[24px] border border-red-100 bg-[#fffdf8] p-6">
-                <h3 className="text-xl font-semibold text-slate-900">Record a payment</h3>
-                <p className="mt-2 text-base text-slate-600">
-                  Log tuition or other school payments for any student account.
-                </p>
-
-                <form onSubmit={handlePaymentSubmit} className="mt-6 space-y-4">
-                  <select
-                    className="w-full rounded-2xl border border-red-200 bg-white px-4 py-3 text-base outline-none"
-                    value={paymentForm.studentId}
-                    onChange={(event) =>
-                      setPaymentForm((current) => ({ ...current, studentId: event.target.value }))
-                    }
-                  >
-                    <option value="">Select student</option>
-                    {students.map((student) => (
-                      <option key={student.id} value={student.id}>
-                        {student.name}
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    className="w-full rounded-2xl border border-red-200 bg-white px-4 py-3 text-base outline-none"
-                    placeholder="Amount received"
-                    type="number"
-                    value={paymentForm.amount}
-                    onChange={(event) =>
-                      setPaymentForm((current) => ({ ...current, amount: event.target.value }))
-                    }
-                  />
-                  <textarea
-                    className="min-h-28 w-full rounded-2xl border border-red-200 bg-white px-4 py-3 text-base outline-none"
-                    placeholder="Payment note"
-                    value={paymentForm.note}
-                    onChange={(event) =>
-                      setPaymentForm((current) => ({ ...current, note: event.target.value }))
-                    }
-                  />
-                  <button
-                    type="submit"
-                    className="w-full rounded-2xl bg-red-600 px-4 py-3 text-base font-semibold text-white transition hover:bg-red-500"
-                  >
-                    Save payment
-                  </button>
-                </form>
-
-                <div className="mt-6 rounded-2xl border border-green-100 bg-green-50/80 p-4">
-                  <p className="text-lg font-semibold text-slate-900">Suggested next steps</p>
-                  <ul className="mt-3 space-y-2 text-base text-slate-600">
-                    <li>• Connect this dashboard to a real database.</li>
-                    <li>• Add authentication for staff and admin roles.</li>
-                    <li>• Generate receipts and payment reports.</li>
-                  </ul>
+            {/* ── Tab: Import ─────────────────── */}
+            {activeTab === "import" && (
+              <div className="max-w-lg">
+                <div className="rounded-xl border border-gray-200 bg-white p-6">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-1">Import Students</h2>
+                  <p className="text-sm text-gray-400 mb-6">Upload an Excel or CSV file</p>
+                  <form onSubmit={handleExcelImport} className="space-y-4">
+                    <label className="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-200 bg-gray-50/50 p-8 cursor-pointer hover:border-gray-300 hover:bg-gray-50 transition-colors">
+                      <IconUpload />
+                      <span className="text-sm text-gray-500">{selectedFile ? selectedFile.name : "Click to choose file"}</span>
+                      <input type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={(e) => setSelectedFile(e.target.files?.[0] || null)} />
+                    </label>
+                    <button type="submit" disabled={importing}
+                      className="w-full rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:ring-offset-2">
+                      {importing ? "Importing..." : "Import Students"}
+                    </button>
+                    <p className="text-xs text-gray-400 text-center">{importStatus}</p>
+                  </form>
                 </div>
               </div>
-            </div>
-          </section>
+            )}
+          </div>
         </main>
       </div>
     </div>
