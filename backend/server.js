@@ -60,7 +60,7 @@ const starterStudents = [
 
 function ensureDataFile() {
   if (!fs.existsSync(DATA_FILE)) {
-    const initialData = { students: starterStudents, payments: [], feeSettings: starterFeeSettings };
+    const initialData = { students: [], payments: [], feeSettings: starterFeeSettings };
     fs.writeFileSync(DATA_FILE, JSON.stringify(initialData, null, 2));
   }
 }
@@ -73,6 +73,10 @@ function loadData() {
     data.students = data.students.map((student) => ({
       ...student,
       familyName: student.familyName || "Unassigned",
+      feeAmount: 0,
+      paidAmount: 0,
+      lastPaymentDate: student.lastPaymentDate || "",
+      note: student.note || "No fee data yet",
     }));
   }
 
@@ -84,18 +88,17 @@ function saveData(data) {
 }
 
 function createStudentRecord(body, data, index = 0) {
-  const feeSettings = data.feeSettings || starterFeeSettings;
-  const defaultFee = feeSettings[body.grade]?.[body.feeCategory || "Tuition"] || Number(body.feeAmount) || 0;
+  const explicitFee = Number(body.feeAmount);
 
   return {
     id: Date.now() + index,
     name: body.name,
     familyName: body.familyName || "Unassigned",
     grade: body.grade,
-    feeAmount: Number(body.feeAmount) || defaultFee,
+    feeAmount: Number.isFinite(explicitFee) ? explicitFee : 0,
     paidAmount: Number(body.paidAmount) || 0,
     lastPaymentDate: body.lastPaymentDate || "",
-    note: body.note || "New student added",
+    note: body.note || "No fee data yet",
     feeCategory: body.feeCategory || "Tuition",
   };
 }
@@ -255,6 +258,32 @@ const server = http.createServer(async (req, res) => {
       data.students.unshift(...importedStudents);
       saveData(data);
       sendJson(res, 201, { students: importedStudents });
+    } catch (error) {
+      sendJson(res, 400, { error: error.message });
+    }
+    return;
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/students/assign-family") {
+    try {
+      const body = await parseBody(req);
+      const data = loadData();
+      const student = data.students.find((entry) => entry.id === Number(body.studentId));
+
+      if (!student) {
+        sendJson(res, 404, { error: "Student not found" });
+        return;
+      }
+
+      const familyName = String(body.familyName || "").trim();
+      if (!familyName) {
+        sendJson(res, 400, { error: "Family name is required" });
+        return;
+      }
+
+      student.familyName = familyName;
+      saveData(data);
+      sendJson(res, 200, { student });
     } catch (error) {
       sendJson(res, 400, { error: error.message });
     }
